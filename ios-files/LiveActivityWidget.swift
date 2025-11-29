@@ -48,6 +48,7 @@ public struct LiveActivityAttributes: ActivityAttributes {
   var imageHeightPercent: Double?
   var imageAlign: String?
   var contentFit: String?
+  var elapsedLabel: String?
 
   public init(
     name: String,
@@ -66,7 +67,8 @@ public struct LiveActivityAttributes: ActivityAttributes {
     imageWidthPercent: Double? = nil,
     imageHeightPercent: Double? = nil,
     imageAlign: String? = nil,
-    contentFit: String? = nil
+    contentFit: String? = nil,
+    elapsedLabel: String? = nil
   ) {
     self.name = name
     self.backgroundColor = backgroundColor
@@ -85,6 +87,7 @@ public struct LiveActivityAttributes: ActivityAttributes {
     self.imageHeightPercent = imageHeightPercent
     self.imageAlign = imageAlign
     self.contentFit = contentFit
+    self.elapsedLabel = elapsedLabel
   }
 
   public enum DynamicIslandTimerType: String, Codable {
@@ -152,7 +155,7 @@ public struct LiveActivityWidget: Widget {
             .applyWidgetURL(from: context.attributes.deepLinkUrl)
           } else if let startDate = context.state.timerStartDateInMilliseconds {
             dynamicIslandExpandedBottomElapsed(
-              startDate: startDate, progressViewTint: context.attributes.progressViewTint
+              startDate: startDate, progressViewTint: context.attributes.progressViewTint, elapsedLabel: context.attributes.elapsedLabel
             )
             .padding(.horizontal, 5)
             .applyWidgetURL(from: context.attributes.deepLinkUrl)
@@ -280,9 +283,9 @@ public struct LiveActivityWidget: Widget {
     }
   }
 
-  private func dynamicIslandExpandedBottomElapsed(startDate: Double, progressViewTint _: String?) -> some View {
+  private func dynamicIslandExpandedBottomElapsed(startDate: Double, progressViewTint _: String?, elapsedLabel: String?) -> some View {
     HStack {
-      Text("Elapsed:")
+      Text(elapsedLabel ?? "Elapsed:")
         .foregroundStyle(.white.opacity(0.75))
       Text(Date(timeIntervalSince1970: startDate / 1000), style: .timer)
         .foregroundStyle(.white)

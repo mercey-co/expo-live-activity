@@ -214,7 +214,7 @@ import WidgetKit
                   .modifier(ConditionalForegroundViewModifier(color: attributes.progressViewLabelColor))
               } else if let startDate = contentState.timerStartDateInMilliseconds {
                 HStack(spacing: 4) {
-                  Text("Elapsed:")
+                  Text(attributes.elapsedLabel ?? "Elapsed:")
                   Text(Date(timeIntervalSince1970: startDate / 1000), style: .timer)
                     .fontWeight(.semibold)
                 }
@@ -242,7 +242,7 @@ import WidgetKit
               .modifier(ConditionalForegroundViewModifier(color: attributes.progressViewLabelColor))
           } else if let startDate = contentState.timerStartDateInMilliseconds {
             HStack(spacing: 4) {
-              Text("Elapsed:")
+              Text(attributes.elapsedLabel ?? "Elapsed:")
               Text(Date(timeIntervalSince1970: startDate / 1000), style: .timer)
                 .fontWeight(.semibold)
             }
