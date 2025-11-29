@@ -35,6 +35,12 @@ jobs:
       - name: Install root dependencies
         run: npm ci
 
+      # Build the library and plugin
+      - name: Build library and plugin
+        run: |
+          npm run build
+          cd plugin && npx tsc
+
       # Generate Maestro test flows
       - name: Generate test flows
         env:
@@ -106,10 +112,15 @@ jobs:
           name: maestro-debug
           path: ~/.maestro/tests/
 
-      # Generate PDF report (always, even if tests fail)
+      # Generate PDF report (only if screenshots exist)
       - name: Generate PDF report
         if: always()
-        run: npm run generateTestReport
+        run: |
+          if [ -d "./example/tests/screenshots" ]; then
+            npm run generateTestReport
+          else
+            echo "⚠️ Skipping report generation - no screenshots folder found"
+          fi
 
       # Upload the PDF report artifact
       - name: Upload PDF report
