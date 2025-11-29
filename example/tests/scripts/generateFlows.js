@@ -27,11 +27,15 @@ appId: ${APP_ID}
         id: "switch-elapsed-timer"
 - tapOn:
     id: "switch-elapsed-timer"
-${config.elapsedLabel ? `- tapOn:
+${
+  config.elapsedLabel
+    ? `- tapOn:
     id: "input-elapsed-label"
 - inputText: '${config.elapsedLabel}'
 - tapOn:
-    id: "input-elapsed-label-label"` : ''}
+    id: "input-elapsed-label-label"`
+    : ''
+}
 - scrollUntilVisible:
     element:
         id: "btn-start-activity"
