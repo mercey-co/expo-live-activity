@@ -142,19 +142,22 @@ export default function CreateLiveActivityScreen() {
     paddingHorizontal,
   ])
 
+  const getProgressState = () => {
+    if (useElapsedTimer) {
+      return { startDate: Date.now() }
+    }
+    if (passDate) {
+      return { date: date.getTime() }
+    }
+    if (passProgress) {
+      return { progress: parseFloat(progress) }
+    }
+    return {}
+  }
+
   const startActivity = () => {
     Keyboard.dismiss()
-    const progressState = useElapsedTimer
-      ? {
-          startDate: Date.now(), // Start counting from now
-        }
-      : passDate
-        ? {
-            date: passDate ? date.getTime() : undefined,
-          }
-        : {
-            progress: passProgress ? parseFloat(progress) : undefined,
-          }
+    const progressState = getProgressState()
 
     const state: LiveActivityState = {
       title,
