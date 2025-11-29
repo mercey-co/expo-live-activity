@@ -7,32 +7,34 @@ fs.mkdirSync(`${mainPath}/generated`, { recursive: true })
 
 for (const test of configs) {
   const { id, title, config } = test
-  const configJson = JSON.stringify(config).replace(/'/g, "''")
 
-  const yaml = `
+  // Check if this is an elapsed timer test or an image test
+  const isElapsedTimerTest = config.useElapsedTimer === true
+
+  let yaml
+  if (isElapsedTimerTest) {
+    // Generate elapsed timer test flow
+    yaml = `
 appId: ${APP_ID}
 ---
 - launchApp:
       clearState: true
       permissions:
           all: unset
+- scrollUntilVisible:
+    element:
+        id: "switch-elapsed-timer"
 - tapOn:
-    id: "input-image-width"
-- inputText: '${config.imageSize?.width ?? ''}'
+    id: "switch-elapsed-timer"
+${
+  config.elapsedLabel
+    ? `- tapOn:
+    id: "input-elapsed-label"
+- inputText: '${config.elapsedLabel}'
 - tapOn:
-    id: "input-image-width-label"
-- tapOn:
-    id: "input-image-height"
-- inputText: '${config.imageSize?.height ?? ''}'
-- tapOn:
-    id: "input-image-height-label"       
-- tapOn:
-    id: "dropdown-content-fit"
-- tapOn: "${
-    config.contentFit === 'scale-down'
-      ? 'Scale Down'
-      : config.contentFit.charAt(0).toUpperCase() + config.contentFit.slice(1)
-  }"
+    id: "input-elapsed-label-label"`
+    : ''
+}
 - scrollUntilVisible:
     element:
         id: "btn-start-activity"
@@ -58,6 +60,58 @@ appId: ${APP_ID}
 
 - takeScreenshot: ${mainPath}/screenshots/${id}
 `
+  } else {
+    // Generate image config test flow (original behavior)
+    yaml = `
+appId: ${APP_ID}
+---
+- launchApp:
+      clearState: true
+      permissions:
+          all: unset
+- tapOn:
+    id: "input-image-width"
+- inputText: '${config.imageSize?.width ?? ''}'
+- tapOn:
+    id: "input-image-width-label"
+- tapOn:
+    id: "input-image-height"
+- inputText: '${config.imageSize?.height ?? ''}'
+- tapOn:
+    id: "input-image-height-label"
+- tapOn:
+    id: "dropdown-content-fit"
+- tapOn: "${
+      config.contentFit === 'scale-down'
+        ? 'Scale Down'
+        : config.contentFit.charAt(0).toUpperCase() + config.contentFit.slice(1)
+    }"
+- scrollUntilVisible:
+    element:
+        id: "btn-start-activity"
+- tapOn:
+    id: "btn-start-activity"
+    delay: 3000
+- stopApp
+- swipe:
+      start: 20%, 2%
+      end: 20%, 80%
+      duration: 200
+- tapOn:
+      point: 50%,50%
+      delay: 100
+- extendedWaitUntil:
+    visible: "Title"
+    timeout: 20000
+    optional: true
+- tapOn:
+    text: "Allow"
+    delay: 500
+    optional: true
+
+- takeScreenshot: ${mainPath}/screenshots/${id}
+`
+  }
 
   fs.writeFileSync(`${mainPath}/generated/${id}.yaml`, yaml.trim())
   console.log(`✅ generated flow for: ${title}`)

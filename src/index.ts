@@ -73,6 +73,7 @@ export type LiveActivityConfig = {
   imageAlign?: ImageAlign
   imageSize?: ImageSize
   contentFit?: ImageContentFit
+  elapsedLabel?: string
 }
 
 export type ActivityTokenReceivedEvent = {

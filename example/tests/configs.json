@@ -1,5 +1,20 @@
 [
   {
+    "id": "elapsed-default-label",
+    "title": "elapsed timer | default label",
+    "config": { "useElapsedTimer": true }
+  },
+  {
+    "id": "elapsed-custom-label-french",
+    "title": "elapsed timer | French label",
+    "config": { "useElapsedTimer": true, "elapsedLabel": "Temps écoulé:" }
+  },
+  {
+    "id": "elapsed-custom-label-german",
+    "title": "elapsed timer | German label",
+    "config": { "useElapsedTimer": true, "elapsedLabel": "Verstrichene Zeit:" }
+  },
+  {
     "id": "fit-cover-50x50",
     "title": "cover | 50x50px",
     "config": { "imageSize": { "width": 50, "height": 50 }, "contentFit": "cover" }

@@ -51,6 +51,8 @@ export default function CreateLiveActivityScreen() {
   const [paddingRight, setPaddingRight] = useState('')
   const [paddingVertical, setPaddingVertical] = useState('')
   const [paddingHorizontal, setPaddingHorizontal] = useState('')
+  const [elapsedLabel, setElapsedLabel] = useState('')
+  const [useElapsedTimer, setUseElapsedTimer] = useState(false)
 
   const onChangeProgress = useCallback(
     (text: string) => {
@@ -140,15 +142,22 @@ export default function CreateLiveActivityScreen() {
     paddingHorizontal,
   ])
 
+  const getProgressState = () => {
+    if (useElapsedTimer) {
+      return { startDate: Date.now() }
+    }
+    if (passDate) {
+      return { date: date.getTime() }
+    }
+    if (passProgress) {
+      return { progress: parseFloat(progress) }
+    }
+    return {}
+  }
+
   const startActivity = () => {
     Keyboard.dismiss()
-    const progressState = passDate
-      ? {
-          date: passDate ? date.getTime() : undefined,
-        }
-      : {
-          progress: passProgress ? parseFloat(progress) : undefined,
-        }
+    const progressState = getProgressState()
 
     const state: LiveActivityState = {
       title,
@@ -167,6 +176,7 @@ export default function CreateLiveActivityScreen() {
         imageAlign,
         contentFit,
         padding: computePadding(),
+        elapsedLabel: elapsedLabel || undefined,
       })
       if (id) setActivityID(id)
     } catch (e) {
@@ -438,6 +448,37 @@ export default function CreateLiveActivityScreen() {
                 value={isTimerTypeDigital}
               />
             </View>
+            <View style={styles.spacer} />
+            <View style={styles.labelWithSwitch}>
+              <Text style={styles.label}>Use elapsed timer (counts up):</Text>
+              <Switch
+                onValueChange={() => {
+                  setUseElapsedTimer(toggle)
+                  if (!useElapsedTimer) {
+                    setPassDate(false)
+                    setPassProgress(false)
+                  }
+                }}
+                value={useElapsedTimer}
+                testID="switch-elapsed-timer"
+              />
+            </View>
+            {useElapsedTimer && (
+              <>
+                <View style={styles.labelWithSwitch}>
+                  <Text style={styles.label} testID="input-elapsed-label-label">
+                    Elapsed label (i18n):
+                  </Text>
+                </View>
+                <TextInput
+                  style={styles.input}
+                  onChangeText={setElapsedLabel}
+                  placeholder='Custom label (default: "Elapsed:")'
+                  value={elapsedLabel}
+                  testID="input-elapsed-label"
+                />
+              </>
+            )}
             <View style={styles.spacer} />
             <View style={styles.labelWithSwitch}>
               <Text style={styles.label}>Show progress:</Text>

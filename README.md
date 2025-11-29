@@ -165,6 +165,7 @@ The `config` object should include:
    imageAlign?: ImageAlign; // 'top' | 'center' | 'bottom'
    imageSize?: ImageSize // { width: number|`${number}%`, height: number|`${number}%` } | undefined (defaults to 64pt)
    contentFit?: ImageContentFit; // 'cover' | 'contain' | 'fill' | 'none' | 'scale-down'
+   elapsedLabel?: string; // Custom label for elapsed timer (default: "Elapsed:") - useful for i18n
 };
 ```
 
@@ -228,6 +229,7 @@ const config: LiveActivity.LiveActivityConfig = {
   subtitleColor: '#AAAAAA',
   timerType: 'digital', // Shows elapsed time as "0:45:30"
   deepLinkUrl: '/timesheet',
+  elapsedLabel: 'Time worked:', // Custom label (default: "Elapsed:") - useful for i18n
 }
 
 const activityId = LiveActivity.startActivity(state, config)
@@ -326,7 +328,8 @@ Example payload for starting Live Activity with elapsed timer:
       "titleColor": "FFFFFF",
       "subtitleColor": "AAAAAA",
       "timerType": "digital",
-      "deepLinkUrl": "/timesheet"
+      "deepLinkUrl": "/timesheet",
+      "elapsedLabel": "Time worked:"
     }
   }
 }
