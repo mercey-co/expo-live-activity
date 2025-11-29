@@ -149,12 +149,12 @@ export default function CreateLiveActivityScreen() {
           startDate: Date.now(), // Start counting from now
         }
       : passDate
-      ? {
-          date: passDate ? date.getTime() : undefined,
-        }
-      : {
-          progress: passProgress ? parseFloat(progress) : undefined,
-        }
+        ? {
+            date: passDate ? date.getTime() : undefined,
+          }
+        : {
+            progress: passProgress ? parseFloat(progress) : undefined,
+          }
 
     const state: LiveActivityState = {
       title,

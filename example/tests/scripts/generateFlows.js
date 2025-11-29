@@ -7,7 +7,6 @@ fs.mkdirSync(`${mainPath}/generated`, { recursive: true })
 
 for (const test of configs) {
   const { id, title, config } = test
-  const configJson = JSON.stringify(config).replace(/'/g, "''")
 
   // Check if this is an elapsed timer test or an image test
   const isElapsedTimerTest = config.useElapsedTimer === true
